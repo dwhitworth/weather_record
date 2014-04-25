@@ -1,0 +1,42 @@
+<h2>Most Recent Weather For <%= @city.city %> <%= @city.state %></h2>
+<% @records.each do |record| %>
+  <strong><%= record.time %></strong>
+  <ul class="weather-records">
+    <li>Description: <%= record.description %></li>
+    <li>Temperature: <%= record.temperature %></li>
+    <li>Wind: <%= record.wind %></li>
+  </ul>
+  <button class="get-weather">Get Latest Weather</button>
+<% end %>
+
+
+<script>
+  $('.get-weather').on('click', function(e){
+    e.preventDefault();
+    console.log("Fetching weather...")
+
+    var url = "http://api.wunderground.com/api/" + ENV["WEATHER_KEY"] + "/conditions/q/" + <%= @city.state %> + "/" + <%= @city.city %> + ".json";
+
+    $.ajax({
+      type: "GET",
+      url: url
+     })
+    .done(function ( msg ) {
+      console.log("The temperature is: " + msg.current_observation.temperature_string);
+      var temp = msg.current_observation.temperature_string;
+      var time = msg.current_observation.observation_time;
+      var description = msg.current_observation.weather;
+      var wind = msg.current_observation.wind_string;
+      $.post("/weather_records",{
+        weather_record:{
+          temperature: temp,
+          time: time,
+          description: description,
+          wind: wind
+        }
+    });
+  alert('Record saved');
+   });
+  });
+</script>
+

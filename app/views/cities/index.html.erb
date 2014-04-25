@@ -1,0 +1,14 @@
+<h1>All Cities</h1>
+
+
+<%= @cities.each do |city| %>
+  <h3><%= city.city %>, <%= city.state %></h3>
+  <% city.weather_records.last(5).each do |record| %>
+    <ul><h4>Most Recent Weather Updates</h4>
+      <li><%= record.time %></li>
+      <li>Description: <%= record.description %></li>
+      <li>Temperature: <%= record.temperature %></li>
+      <li>Wind: <%= record.wind %></li>
+    </ul>
+  <% end %>
+<% end %>
